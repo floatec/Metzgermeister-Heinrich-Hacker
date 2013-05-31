@@ -15,12 +15,14 @@ function love.load()
 		heinrich = love.graphics.newImage("gfx/bucher.png"),
 		child = love.graphics.newImage("gfx/child.png"),
 	}
-	
+	countdown=300
 	-- sound effect
-	-- sound = love.audio.newSource("crash.ogg", "static")
-	
+	sound={
+		scream = love.audio.newSource("sfx/scream.wav", "static"),
+		slay  = love.audio.newSource("sfx/slay.mp3", "static")
+	}
 	-- music
-	music = love.audio.newSource("alley.mp3")
+	music = love.audio.newSource("sfx/Dark_Side_Theme_V03.mp3")
 	music:setLooping(true)
 	music:setVolume(0.5)
 	love.audio.play(music)
@@ -55,6 +57,7 @@ function love.load()
 end
 
 function love.update(dt)
+	countdown=countdown-dt
 	oldx, oldy = p.x, p.y
 	newx, newy = p.x, p.y
 	-- update x
@@ -80,6 +83,18 @@ function love.update(dt)
 			gewicht=gewicht+math.random(20,30);
 			table.remove(childs,i)
 			spawn_Child();
+			-- play/rewind effect
+			if sound.scream:isStopped() then
+				love.audio.play(sound.scream)
+			else
+				sound.scream:rewind()
+			end
+			if sound.slay:isStopped() then
+
+				love.audio.play(sound.slay)
+			else
+				sound.slay:rewind()
+			end
 		end
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			v.isGrabbed = true;
@@ -110,8 +125,9 @@ function love.draw()
 	love.graphics.draw(images.heinrich, p.x, p.y)
 	
 	-- text
-	love.graphics.setColor(255, 0, 0)
-    love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 10, width, "right")	
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.printf("Zeit: "..(math.floor(countdown/60))..":"..(math.floor(countdown)%60), 0, 0, width, "left")	
+    love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 0, width, "right")	
 end
 
 childs={}
