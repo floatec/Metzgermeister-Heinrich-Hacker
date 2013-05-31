@@ -27,6 +27,9 @@ function automove(entity, dt)
 		-- wall hit
 		if can_move_to(newx,newy,32,32) then
 			entity.x,entity.y=newx,newy
+			if(math.random(0,50)==0) then
+				entity.direction = math.random(1,4)
+			end
 		else
 			--print("change direction")
 			entity.direction = math.random(1,4)
