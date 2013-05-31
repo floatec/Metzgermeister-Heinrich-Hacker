@@ -30,7 +30,7 @@ function love.load()
 	-- game
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
-	
+	gewicht = 0	
 	-- player
 	p = {
 		x = 31, 
@@ -39,12 +39,13 @@ function love.load()
 		h = images.heinrich:getHeight()
 	}
 
-	for x, y, tile in map("buildings"):iterate() do
-  		p.x,p.y=x*32,y*32
+for x, y, tile in map("buildings"):iterate() do
+  		if tile and tile.properties["spawn"] then
+  			spawnx,spawny=x,y
+  			p.x,p.y=x*16,y*16
   		break
-	end
-
-	--child
+  	end
+	end	--child
 	spawn_Child()
 	spawn_Child()
 	spawn_Child()
@@ -77,7 +78,11 @@ function love.update(dt)
 
 	-- update children
 	for i, v in ipairs(childs) do
-
+		if(hits_spawn(v.x,v.y,32,32)) then
+			gewicht=gewicht+math.random(20,30);
+			table.remove(childs,i)
+			spawn_Child();
+		end
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			v.isGrabbed = true;
 
@@ -119,7 +124,7 @@ function love.draw()
 	
 	-- text
 	love.graphics.setColor(255, 0, 0)
-    love.graphics.printf("Metzgermeister Heinrich Hacker", 0, 10, width, "center")	
+    love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 10, width, "right")	
 end
 
 childs={}
@@ -136,7 +141,7 @@ function spawn_Child()
 	repeat
 	t.x = math.random(0,800-32)
 	t.y =  math.random(0,600-32)
-	until can_move_to(t.x,t.y,32,32)
+	until can_move_to(t.x+2,t.y+2,28,28)
 	-- misc
 	t.isGrabbed = false
 	

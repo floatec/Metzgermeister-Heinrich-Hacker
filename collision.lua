@@ -4,10 +4,10 @@ function move(entity, newx, newy)
 
 	oldx, oldy = entity.x, entity.y
 
-	if(can_move_to(entity.x, newy, 32, 32)) then
+	if(can_move_to(entity.x+2, newy+2, 28, 28)) then
 		entity.x, entity.y = entity.x, newy
 	end
-	if(can_move_to(newx, entity.y, 32, 32)) then
+	if(can_move_to(newx+2, entity.y+2, 28, 28)) then
 		entity.x, entity.y = newx, entity.y
 	end
 
@@ -25,7 +25,7 @@ function automove(entity, dt)
 			newy = entity.y - dist*(entity.direction-2)
 		end
 		-- wall hit
-		if can_move_to(newx,newy,32,32) then
+		if can_move_to(newx+2,newy+2,28,28) then
 			entity.x,entity.y=newx,newy
 			if(math.random(0,50)==0) then
 				entity.direction = math.random(1,4)
@@ -37,19 +37,26 @@ function automove(entity, dt)
 		--print (entity.x.." "..entity.y)
 end
 
-
 function can_move_to( x,y ,w,h)
-	 if is_colliding_with_wall(x,y) or  is_colliding_with_wall(x+w,y) or  is_colliding_with_wall(x,y+h) or  is_colliding_with_wall(x+w,y+h) or
-	 	is_colliding_with_wall(x+w/3,y) or  is_colliding_with_wall(x+w/3*2,y) or  is_colliding_with_wall(x+w/3,y+h) or  is_colliding_with_wall(x+w/3*2,y+h) or
-	 	is_colliding_with_wall(x,y+h/3) or  is_colliding_with_wall(x+w,y+h/3) or  is_colliding_with_wall(x,y+h/3*2) or  is_colliding_with_wall(x+w,y+h/3*2) then
-	 	return false
-	 end
-	 	return true
+	return not hits( x,y ,w,h,"wall");	
 end
 
-function is_colliding_with_wall(x,y)
+function hits_spawn( x,y ,w,h)
+	return hits( x,y ,w,h,"spawn");	
+end
+
+function hits( x,y ,w,h,prop)
+	 if is_colliding_with_wall(x,y,prop) or  is_colliding_with_wall(x+w,y,prop) or  is_colliding_with_wall(x,y+h,prop) or  is_colliding_with_wall(x+w,y+h,prop) or
+	 	is_colliding_with_wall(x+w/3,y,prop) or  is_colliding_with_wall(x+w/3*2,y,prop) or  is_colliding_with_wall(x+w/3,y+h,prop) or  is_colliding_with_wall(x+w/3*2,y+h,prop) or
+	 	is_colliding_with_wall(x,y+h/3,prop) or  is_colliding_with_wall(x+w,y+h/3,prop) or  is_colliding_with_wall(x,y+h/3*2,prop) or  is_colliding_with_wall(x+w,y+h/3*2,prop) then
+	 	return true
+	 end
+	 	return false
+end
+
+function is_colliding_with_wall(x,y,prop)
 	local tile=map("buildings")(math.floor(x/16),math.floor(y/16))
-	if tile and tile.properties["wall"] then
+	if tile and tile.properties[prop] then
 		return true
 	end
 	
