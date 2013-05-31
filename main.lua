@@ -71,6 +71,7 @@ function love.update(dt)
 
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			v.isGrabbed = true;
+
 			move(v, v.x + dx, v.y + dy)
 		else
 			v.isGrabbed = false;
@@ -82,8 +83,8 @@ end
 function love.draw()
 	
 	-- reset color
+	love.graphics.setBackgroundColor(80, 80, 80)
 	love.graphics.setColor(255, 255, 255)
-	
 	
 	-- Draws the map
 	map:draw()
@@ -118,4 +119,23 @@ function spawn_Child()
 	t.isGrabbed = false
 	
 	table.insert(childs, t)
+end
+
+enemies={}
+function spawn_Enemy()
+
+	local t = {}
+
+	--TODO
+	
+	-- size
+	t.scale = 1
+	--t.w = images.child:getWidth() * t.scale
+	--t.h = images.child:getHeight() * t.scale
+	t.direction = math.random(1,4) 
+	-- position
+	--t.x = 31
+	--t.y = 31
+	
+	table.insert(enemies, t)
 end
