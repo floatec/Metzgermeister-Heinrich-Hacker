@@ -8,9 +8,12 @@ function love.load()
 	loader.path = "maps/"
 
 	 -- Loads the map file and returns it
-	map = loader.load("level1.tmx")
+	map = loader.load("level2.tmx")
 
-
+	for x, y, tile in map("layer name"):iterate() do
+  		p.x,p.y=x*32,y*32
+  		break
+	end
 	-- load images
 	images = {
 		heinrich = love.graphics.newImage("gfx/bucher.png"),
@@ -81,6 +84,7 @@ end
 
 function love.draw()
 	
+	love.graphics.setBackgroundColor(80,80,80)
 	-- reset color
 	love.graphics.setColor(255, 255, 255)
 	
@@ -112,8 +116,10 @@ function spawn_Child()
 	t.h = images.child:getHeight() * t.scale
 	t.direction = math.random(1,4) 
 	-- position
-	t.x = 31
-	t.y = 31
+	repeat
+	t.x = math.random(0,800-32)
+	t.y =  math.random(0,600-32)
+	until can_move_to(t.x,t.y,32,32)
 	-- misc
 	t.isGrabbed = false
 	
