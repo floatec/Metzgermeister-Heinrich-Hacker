@@ -40,6 +40,10 @@ function love.load()
 
 	--child
 	spawn_Child()
+	spawn_Child()
+	spawn_Child()
+	spawn_Child()
+	spawn_Child()
 end
 
 function love.update(dt)
