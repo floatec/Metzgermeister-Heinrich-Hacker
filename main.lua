@@ -31,7 +31,7 @@ function love.load()
 	height = love.graphics.getHeight()
 	
 	-- player
-	player = {
+	p = {
 		x = 31, 
 		y = 31,
 		w = images.heinrich:getWidth(),
@@ -43,6 +43,7 @@ function love.load()
 end
 
 function love.update(dt)
+	oldx, oldy = p.x, p.y
 	newx, newy = p.x, p.y
 	-- update x
 	if love.keyboard.isDown("left")   then
@@ -57,16 +58,20 @@ function love.update(dt)
 	elseif love.keyboard.isDown("down") then
 		newy = p.y + speed * dt
 	end
-	if(can_move_to(p.x, newy, 32, 32)) then
-		p.x, p.y = p.x, newy
-	end
-	if(can_move_to(newx, p.y, 32, 32)) then
-		p.x, p.y = newx, p.y
-	end
 
-	-- update childs
+	-- actual movement
+	dx, dy = move(p, newx, newy)
+
+	-- update children
 	for i, v in ipairs(childs) do
-		move(v, dt)
+
+		if love.keyboard.isDown(" ") and is_colliding(p, v) then
+			v.isGrabbed = true;
+			move(v, v.x + dx, v.y + dy)
+		else
+			v.isGrabbed = false;
+			automove(v, dt)
+		end
 	end
 end
 
@@ -105,6 +110,8 @@ function spawn_Child()
 	-- position
 	t.x = 31
 	t.y = 31
+	-- misc
+	t.isGrabbed = false
 	
 	table.insert(childs, t)
 end
