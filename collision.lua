@@ -4,10 +4,11 @@ function move(entity, dt)
 		print (entity.direction)
 		newy=entity.y
 		newx=entity.x
-		if entity.direction%2==0 then
-			newx = entity.x - speed*0.3 * (entity.direction-3) * dt
+		local dist=(speed*0.3 * dt)%16
+		if entity.direction % 2 == 0 then
+			newx = entity.x - dist * (entity.direction-3)
 		else 	
-			newy = entity.y - speed*0.3 * (entity.direction-2) * dt
+			newy = entity.y - dist*(entity.direction-2)
 		end
 		-- wall hit
 		if can_move_to(newx,newy,32,32) then

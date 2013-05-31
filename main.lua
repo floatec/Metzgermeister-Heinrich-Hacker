@@ -31,7 +31,7 @@ function love.load()
 	height = love.graphics.getHeight()
 	
 	-- player
-	player = {
+	p = {
 		x = 31, 
 		y = 31,
 		w = images.heinrich:getWidth(),
