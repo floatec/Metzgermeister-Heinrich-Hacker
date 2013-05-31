@@ -15,6 +15,11 @@
     <property name="wall" value="1"/>
    </properties>
   </tile>
+  <tile id="2">
+   <properties>
+    <property name="spawn" value="1"/>
+   </properties>
+  </tile>
   <tile id="3">
    <properties>
     <property name="wall" value="1"/>
