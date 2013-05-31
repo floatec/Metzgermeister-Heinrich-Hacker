@@ -79,6 +79,7 @@ function love.update(dt)
 		if(hits_spawn(v.x,v.y,32,32)) then
 			gewicht=gewicht+math.random(20,30);
 			table.remove(childs,i)
+			spawn_Child();
 		end
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			v.isGrabbed = true;
