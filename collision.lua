@@ -22,7 +22,9 @@ end
 
 
 function can_move_to( x,y ,w,h)
-	 if is_colliding_with_wall(x,y) or  is_colliding_with_wall(x+w,y) or  is_colliding_with_wall(x,y+h) or  is_colliding_with_wall(x+w,y+h) then
+	 if is_colliding_with_wall(x,y) or  is_colliding_with_wall(x+w,y) or  is_colliding_with_wall(x,y+h) or  is_colliding_with_wall(x+w,y+h) or
+	 	is_colliding_with_wall(x+w/3,y) or  is_colliding_with_wall(x+w/3*2,y) or  is_colliding_with_wall(x+w/3,y+h) or  is_colliding_with_wall(x+w/3*2,y+h) or
+	 	is_colliding_with_wall(x,y+h/3) or  is_colliding_with_wall(x+w,y+h/3) or  is_colliding_with_wall(x,y+h/3*2) or  is_colliding_with_wall(x+w,y+h/3*2) then
 	 	return false
 	 end
 	 	return true
