@@ -10,14 +10,12 @@ function love.load()
 	 -- Loads the map file and returns it
 	map = loader.load("level2.tmx")
 
-	for x, y, tile in map("layer name"):iterate() do
-  		p.x,p.y=x*32,y*32
-  		break
-	end
 	-- load images
 	images = {
 		heinrich = love.graphics.newImage("gfx/bucher.png"),
 		child = love.graphics.newImage("gfx/child.png"),
+		enemy1 = love.graphics.newImage("gfx/enemy1.png"),
+		enemy2 = love.graphics.newImage("gfx/enemy2.png")
 	}
 	
 	-- sound effect
@@ -41,12 +39,20 @@ function love.load()
 		h = images.heinrich:getHeight()
 	}
 
+	for x, y, tile in map("buildings"):iterate() do
+  		p.x,p.y=x*32,y*32
+  		break
+	end
+
 	--child
 	spawn_Child()
 	spawn_Child()
 	spawn_Child()
 	spawn_Child()
 	spawn_Child()
+
+	spawn_Enemy()
+	spawn_Enemy()
 end
 
 function love.update(dt)
@@ -81,6 +87,12 @@ function love.update(dt)
 			automove(v, dt)
 		end
 	end
+
+	-- update enemies
+	for i, v in ipairs(enemies) do
+		automove(v, dt)
+		v.anim:update(dt)
+	end
 end
 
 function love.draw()
@@ -96,6 +108,10 @@ function love.draw()
 	--childs
 	for i, v in ipairs(childs) do
 		love.graphics.draw(images.child, v.x, v.y, 0 , v.scale, v.scale)
+	end
+
+	for i, v in ipairs(enemies) do
+		v.anim:draw(v.x, v.y)
 	end
 		
 	-- player
@@ -133,15 +149,22 @@ function spawn_Enemy()
 	local t = {}
 
 	--TODO
-	
+	if (math.random(1,2) == 1) then
+		t.animImage = images.enemy1
+	else
+		t.animImage = images.enemy2
+	end
+
 	-- size
 	t.scale = 1
-	--t.w = images.child:getWidth() * t.scale
-	--t.h = images.child:getHeight() * t.scale
+	t.frames = 8
+	t.w = t.animImage:getWidth() * t.scale / t.frames
+	t.h = t.animImage:getHeight() * t.scale
+	t.anim = newAnimation(t.animImage, t.w, t.h, 0.06, t.frames)
 	t.direction = math.random(1,4) 
 	-- position
-	--t.x = 31
-	--t.y = 31
+	t.x = 200
+	t.y = 400
 	
 	table.insert(enemies, t)
 end
