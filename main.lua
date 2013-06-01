@@ -1,6 +1,6 @@
 require "gameplay"
 require "startScreen"
-level=2
+level=1
 START=0
 GAME=1
 GAMEOVER=2
