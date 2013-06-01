@@ -13,8 +13,8 @@ function game.load(map_file)
 
 	-- load images
 	images = {
-		heinrich = love.graphics.newImage("gfx/bucher.png"),
-		child = love.graphics.newImage("gfx/child.png"),
+		heinrich1 = love.graphics.newImage("gfx/heinrich1.png"),
+		girl1 = love.graphics.newImage("gfx/girl1.png"),
 		enemy1 = love.graphics.newImage("gfx/enemy1.png"),
 		enemy2 = love.graphics.newImage("gfx/enemy2.png")
 	}
@@ -36,21 +36,24 @@ function game.load(map_file)
 	width = love.graphics.getWidth()
 	height = love.graphics.getHeight()
 	gewicht = 0	
-	-- player
-	p = {
-		x = 31, 
-		y = 31,
-		w = images.heinrich:getWidth(),
-		h = images.heinrich:getHeight()
-	}
 
-for x, y, tile in map("buildings"):iterate() do
+	-- player
+	p = {}
+	p.x = 31
+	p.y = 31
+	p.animImage = images.heinrich1
+	p.w = p.animImage:getWidth() / animFrames
+	p.h = p.animImage:getHeight()
+	p.anim = newAnimation(p.animImage, p.w, p.h, animDelay, animFrames)
+
+	for x, y, tile in map("buildings"):iterate() do
   		if tile and tile.properties["spawn"] then
   			spawnx,spawny=x,y
   			p.x,p.y=x*16,y*16
   		break
-  	end
-	end	--child
+  		end
+	end	
+
 	spawn_Child()
 	spawn_Child()
 	spawn_Child()
@@ -82,11 +85,15 @@ function game.update(dt)
 	-- actual movement
 	dx, dy = move(p, newx, newy)
 
+	if (math.abs(dx) > 0 or math.abs(dy) > 0) then
+		p.anim:update(dt)
+	end
+
 	-- update children
-	for i, v in ipairs(childs) do
+	for i, v in ipairs(children) do
 		if(hits_spawn(v.x,v.y,32,32)) then
 			gewicht=gewicht+math.random(20,30);
-			table.remove(childs,i)
+			table.remove(children, i)
 			spawn_Child();
 			-- play/rewind effect
 			if sound.scream:isStopped() then
@@ -101,10 +108,12 @@ function game.update(dt)
 				sound.slay:rewind()
 			end
 		end
+
+		--movement & grabbing
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			
 			move(v, v.x + dx, v.y + dy)
-			if v.isGrabbed==false then
+			if (v.isGrabbed == false) then
 				love.audio.play(sound.hallo_meine_liebe)
 			end
 			v.isGrabbed = true;
@@ -112,6 +121,9 @@ function game.update(dt)
 			v.isGrabbed = false;
 			automove(v, dt)
 		end
+
+		--update animation
+		v.anim:update(dt)
 	end
 
 	-- update enemies
@@ -131,9 +143,9 @@ function game.draw()
 	-- Draws the map
 	
 	map:draw()
-	--childs
-	for i, v in ipairs(childs) do
-		love.graphics.draw(images.child, v.x, v.y, 0 , v.scale, v.scale)
+	--children
+	for i, v in ipairs(children) do
+		v.anim:draw(v.x, v.y)
 	end
 
 	for i, v in ipairs(enemies) do
@@ -141,35 +153,34 @@ function game.draw()
 	end
 		
 	-- player
-	love.graphics.draw(images.heinrich, p.x, p.y)
+	p.anim:draw(p.x, p.y)
+
+	--map
 	map("buildings").visible=false
 	map:draw()
 	map("buildings").visible=true
-	-- text
+
+ 	-- text
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.printf("Zeit: "..(math.floor(countdown/60))..":"..(math.floor(countdown)%60), 0, 0, width, "left")	
     love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 0, width, "right")	
 end
 
-childs={}
+children={}
 function spawn_Child()
 
 	local t = {}
-	
-	-- size
-	t.scale = 1
-	t.w = images.child:getWidth() * t.scale
-	t.h = images.child:getHeight() * t.scale
-	t.direction = math.random(1,4) 
-	-- position
-	repeat
-	t.x = math.random(0,800-32)
-	t.y =  math.random(0,600-32)
-	until can_move_to(t.x+2,t.y+2,28,28)
-	-- misc
+
+	t.animImage = images.girl1
+	t.w = t.animImage:getWidth() / animFrames
+	t.h = t.animImage:getHeight()
+	t.x, t.y = spawn_entity()
+
+	t.anim = newAnimation(t.animImage, t.w, t.h, animDelay, animFrames)
+	t.direction = math.random(1,4)
 	t.isGrabbed = false
 	
-	table.insert(childs, t)
+	table.insert(children, t)
 end
 
 enemies={}
@@ -177,23 +188,18 @@ function spawn_Enemy()
 
 	local t = {}
 
-	--TODO
 	if (math.random(1,2) == 1) then
 		t.animImage = images.enemy1
 	else
 		t.animImage = images.enemy2
 	end
 
-	-- size
-	t.scale = 1
-	t.frames = 8
-	t.w = t.animImage:getWidth() * t.scale / t.frames
-	t.h = t.animImage:getHeight() * t.scale
-	t.anim = newAnimation(t.animImage, t.w, t.h, 0.06, t.frames)
-	t.direction = math.random(1,4) 
-	-- position
-	t.x = 200
-	t.y = 400
+	t.w = t.animImage:getWidth() / animFrames
+	t.h = t.animImage:getHeight()
+	t.x, t.y = spawn_entity()
+
+	t.anim = newAnimation(t.animImage, t.w, t.h, animDelay, animFrames)
+	t.direction = math.random(1,4)
 	
 	table.insert(enemies, t)
 end
