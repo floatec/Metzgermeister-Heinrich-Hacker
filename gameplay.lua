@@ -3,11 +3,12 @@ require("global")
 require("collision")
 loader = require("AdvTiledLoader/loader")
 game={}
+game.state=0
 
 function game.load(map_file)
 	-- Path to the tmx files. The file structure must be similar to how they are saved in Tiled
 	loader.path = "maps/"
-
+	game.state=0
 	 -- Loads the map file and returns it
 	map = loader.load(map_file)
 
@@ -63,6 +64,13 @@ end
 
 function game.update(dt)
 	countdown=countdown-dt
+	if countdown<0 then
+		if game.gewicht>500 then 
+			game.state=1
+		else 
+			game.state=2
+		end
+	end
 	oldx, oldy = p.x, p.y
 	newx, newy = p.x, p.y
 	-- update x
@@ -165,7 +173,7 @@ function spawn_Child()
 	repeat
 	t.x = math.random(0,800-32)
 	t.y =  math.random(0,600-32)
-	until can_move_to(t.x+2,t.y+2,28,28)
+	until can_move_to(t.x,t.y,32,32)
 	-- misc
 	t.isGrabbed = false
 	

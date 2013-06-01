@@ -48,6 +48,11 @@
     <property name="wall" value="1"/>
    </properties>
   </tile>
+  <tile id="128">
+   <properties>
+    <property name="wall" value="1"/>
+   </properties>
+  </tile>
   <tile id="129">
    <properties>
     <property name="wall" value="1"/>
