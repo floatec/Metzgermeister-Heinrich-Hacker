@@ -12,6 +12,7 @@ function game.load(map_file)
 	game.state=0
 	children={}
 	enemies={}
+	blood=1
 	 -- Loads the map file and returns it
 	map = loader.load(map_file)
 
@@ -20,7 +21,8 @@ function game.load(map_file)
 		heinrich1 = love.graphics.newImage("gfx/heinrich1.png"),
 		girl1 = love.graphics.newImage("gfx/girl1.png"),
 		enemy1 = love.graphics.newImage("gfx/enemy1.png"),
-		enemy2 = love.graphics.newImage("gfx/enemy2.png")
+		enemy2 = love.graphics.newImage("gfx/enemy2.png"),
+		blood = love.graphics.newImage("gfx/blood.png")
 	}
 	countdown=300
 	-- sound effect
@@ -72,6 +74,7 @@ function game.load(map_file)
 end
 
 function game.update(dt)
+	blood=blood+dt
 	countdown=countdown-dt
 	if gewicht>50 then 
 			game.state=1
@@ -120,6 +123,7 @@ function game.update(dt)
 	-- update children
 	for i, v in ipairs(children) do
 		if(hits_spawn(v.x,v.y,32,32)) then
+			blood=0
 			gewicht=gewicht+math.random(20,30);
 			table.remove(children, i)
 			spawn_Child();
@@ -203,6 +207,10 @@ function game.draw()
 	
 	love.graphics.printf("Zeit: "..(math.floor(countdown/60))..":"..(math.floor(countdown)%60), 0, 0, width, "left")	
     love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 0, width, "right")	
+    if blood<0.12 then
+    	love.graphics.draw(images.blood, 0,0)
+    end
+
 end
 
 children={}
