@@ -29,6 +29,7 @@ function startScreen.update(dt)
 	
 	if love.keyboard.isDown(" ")  then
 		startScreen.state=1
+		love.audio.stop(music)
 	end
 
 	
