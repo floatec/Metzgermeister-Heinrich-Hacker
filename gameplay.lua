@@ -31,6 +31,7 @@ function game.load(map_file)
 
 	}
 	-- music
+	love.audio.stop(music)
 	music = love.audio.newSource("sfx/Dark_Side_Theme_V03.mp3")
 	music:setLooping(true)
 	music:setVolume(0.5)

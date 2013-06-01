@@ -16,6 +16,7 @@ function startScreen.load(screen)
 	
 	}
 	-- music
+	love.audio.stop(music)
 	music = love.audio.newSource("sfx/Dark_Side_Theme_V01.mp3")
 	music:setLooping(true)
 	music:setVolume(0.5)
