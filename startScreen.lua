@@ -3,11 +3,12 @@ require("global")
 
 startScreen={}
 startScreen.state=0
-function startScreen.load(map_file)
-	
+function startScreen.load(screen)
+	startScreen.active=0
+	startScreen.refrash=true
 	-- load images
-	images = {
-		background = love.graphics.newImage("gfx/startscreen.png")
+	startScreen.images = {
+		background = love.graphics.newImage("gfx/"..screen..".png")
 	}
 	countdown=300
 	-- sound effect
@@ -26,16 +27,16 @@ function startScreen.load(map_file)
 end
 
 function startScreen.update(dt)
-	
-	if love.keyboard.isDown(" ")  then
+	startScreen.active=startScreen.active+dt
+	if love.keyboard.isDown(" ") and startScreen.active>2  then
 		startScreen.state=1
+		love.audio.stop(music)
 	end
 
 	
 end
 
 function startScreen.draw()
-	
 	love.graphics.setBackgroundColor(80,80,80)
 	-- reset color
 	love.graphics.setBackgroundColor(80, 80, 80)
@@ -44,5 +45,12 @@ function startScreen.draw()
 	-- Draws the map
 	
 	
-	love.graphics.draw(images.background, 0,0)
+	love.graphics.draw(startScreen.images.background, 0,0)
+	love.graphics.setNewFont(14)
+	love.graphics.printf("by Simon, Mariuz, Floatec & Alulein", 0, height-14, width, "right")
+		love.graphics.setNewFont(20)
+	love.graphics.printf("press [SPACE]", 0, height-20, width, "center")
+	startScreen.refrash=false
+	
+   
 end

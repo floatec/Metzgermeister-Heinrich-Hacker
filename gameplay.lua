@@ -6,9 +6,12 @@ game={}
 game.state=0
 
 function game.load(map_file)
+	love.graphics.setNewFont(14)
 	-- Path to the tmx files. The file structure must be similar to how they are saved in Tiled
 	loader.path = "maps/"
 	game.state=0
+	children={}
+	enemies={}
 	 -- Loads the map file and returns it
 	map = loader.load(map_file)
 
@@ -69,12 +72,12 @@ end
 
 function game.update(dt)
 	countdown=countdown-dt
-	if countdown<0 then
-		if game.gewicht>500 then 
+	if gewicht>50 then 
 			game.state=1
-		else 
+	elseif countdown<0 then
+		
 			game.state=2
-		end
+		
 	end
 	oldx, oldy = p.x, p.y
 	newx, newy = p.x, p.y
@@ -138,7 +141,11 @@ function game.update(dt)
 
 		--movement & grabbing
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
-			
+			for j, k in ipairs(enemies) do
+				if(is_colliding(p, k)) then
+					game.state=2
+				end		
+			end
 			move(v, v.x + dx, v.y + dy)
 			if (v.isGrabbed == false) then
 				love.audio.play(sound.hallo_meine_liebe)
@@ -192,6 +199,7 @@ function game.draw()
 
  	-- text
 	love.graphics.setColor(255, 255, 255)
+	
 	love.graphics.printf("Zeit: "..(math.floor(countdown/60))..":"..(math.floor(countdown)%60), 0, 0, width, "left")	
     love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 0, width, "right")	
 end
