@@ -41,7 +41,7 @@ function spawn_entity()
 	repeat
 		x = math.random(0, 800-32)
 		y =  math.random(0, 600-32)
-	until can_move_to(x+2, y+2, 28, 28)
+	until can_move_to(x, y, 32, 32)
 
 	return x,y
 end

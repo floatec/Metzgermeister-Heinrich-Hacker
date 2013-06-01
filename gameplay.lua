@@ -3,11 +3,12 @@ require("global")
 require("collision")
 loader = require("AdvTiledLoader/loader")
 game={}
+game.state=0
 
 function game.load(map_file)
 	-- Path to the tmx files. The file structure must be similar to how they are saved in Tiled
 	loader.path = "maps/"
-
+	game.state=0
 	 -- Loads the map file and returns it
 	map = loader.load(map_file)
 
@@ -66,6 +67,13 @@ end
 
 function game.update(dt)
 	countdown=countdown-dt
+	if countdown<0 then
+		if game.gewicht>500 then 
+			game.state=1
+		else 
+			game.state=2
+		end
+	end
 	oldx, oldy = p.x, p.y
 	newx, newy = p.x, p.y
 	-- update x
@@ -170,15 +178,13 @@ children={}
 function spawn_Child()
 
 	local t = {}
-
 	t.animImage = images.girl1
 	t.w = t.animImage:getWidth() / animFrames
 	t.h = t.animImage:getHeight()
 	t.x, t.y = spawn_entity()
 
 	t.anim = newAnimation(t.animImage, t.w, t.h, animDelay, animFrames)
-	t.direction = math.random(1,4)
-	t.isGrabbed = false
+	t.direction = math.random(1,4)	t.isGrabbed = false
 	
 	table.insert(children, t)
 end
