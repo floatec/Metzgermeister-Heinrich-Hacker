@@ -22,7 +22,7 @@ function game.load(map_file, countChildren, countEnemies)
 		enemy1 = love.graphics.newImage("gfx/enemy1.png"),
 		enemy2 = love.graphics.newImage("gfx/enemy2.png")
 	}
-	countdown=300
+	countdown=90
 	-- sound effect
 	sound={
 		scream = love.audio.newSource("sfx/scream.wav", "static"),
@@ -72,7 +72,7 @@ end
 
 function game.update(dt)
 	countdown=countdown-dt
-	if gewicht>50 then 
+	if gewicht>=100 then 
 			game.state=1
 	elseif countdown<0 then
 		
@@ -89,7 +89,7 @@ function game.update(dt)
 			grabCount = grabCount + 1
 		end
 	end
-	p.speed = 1 / (math.exp (grabCount, 1.25) + 1) * speed 
+	p.speed = 1 / (math.exp (grabCount, 1.25) + 1) * speed + 50 
 
 	-- update x
 	if love.keyboard.isDown("left")   then
