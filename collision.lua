@@ -51,7 +51,7 @@ function can_move_to( x,y ,w,h)
 end
 
 function can_move_to_police( x,y ,w,h)
-	return not hits( x+4,y+4 ,w-8,h-8,"wall") and not hits( x+4,y+4 ,w-8,h-8,"policewall");	;	
+	return not hits( x+4,y+4 ,w-8,h-8,"wall") and not hits( x+4,y+4 ,w-8,h-8,"policewall")	
 end
 
 function hits_spawn( x,y ,w,h)
