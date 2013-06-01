@@ -21,7 +21,9 @@ function love.load()
 	-- sound effect
 	sound={
 		scream = love.audio.newSource("sfx/scream.wav", "static"),
-		slay  = love.audio.newSource("sfx/slay.mp3", "static")
+		slay  = love.audio.newSource("sfx/slay.mp3", "static"),
+		hallo_meine_liebe  = love.audio.newSource("sfx/hallo_meine_liebe.ogg", "static")
+
 	}
 	-- music
 	music = love.audio.newSource("sfx/Dark_Side_Theme_V03.mp3")
@@ -99,9 +101,12 @@ function love.update(dt)
 			end
 		end
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
-			v.isGrabbed = true;
-
+			
 			move(v, v.x + dx, v.y + dy)
+			if v.isGrabbed==false then
+				love.audio.play(sound.hallo_meine_liebe)
+			end
+			v.isGrabbed = true;
 		else
 			v.isGrabbed = false;
 			automove(v, dt)
