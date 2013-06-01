@@ -45,6 +45,7 @@ function game.load(map_file)
 	p.animImage = images.heinrich1
 	p.w = p.animImage:getWidth() / animFrames
 	p.h = p.animImage:getHeight()
+	p.direction = 1
 	p.anim = newAnimation(p.animImage, p.w, p.h, animDelay, animFrames)
 
 	for x, y, tile in map("buildings"):iterate() do
@@ -79,15 +80,19 @@ function game.update(dt)
 	-- update x
 	if love.keyboard.isDown("left")   then
 		newx = p.x - speed * dt
+		p.direction = 4
 	elseif love.keyboard.isDown("right") then
 		newx = p.x + speed * dt
+		p.direction = 2
 	end
 
 	-- update y
 	if love.keyboard.isDown("up")  then
 		newy = p.y - speed * dt
+		p.direction = 3
 	elseif love.keyboard.isDown("down") then
 		newy = p.y + speed * dt
+		p.direction = 1
 	end
 
 	-- actual movement
@@ -138,6 +143,10 @@ function game.update(dt)
 	for i, v in ipairs(enemies) do
 		automove(v, dt)
 		v.anim:update(dt)
+
+		if (is_colliding(p, v)) then
+			print(p.x)
+		end
 	end
 end
 
@@ -151,17 +160,19 @@ function game.draw()
 	-- Draws the map
 	
 	map:draw()
+
 	--children
 	for i, v in ipairs(children) do
-		v.anim:draw(v.x, v.y)
+		v.anim:draw(v.x, v.y, -v.direction * math.pi / 2 - math.pi / 2, 1, 1, v.w / 2, v.h / 2)
 	end
 
+	--enemies
 	for i, v in ipairs(enemies) do
-		v.anim:draw(v.x, v.y)
+		v.anim:draw(v.x, v.y, -v.direction * math.pi / 2 - math.pi / 2, 1, 1, v.w / 2, v.h / 2)
 	end
 		
 	-- player
-	p.anim:draw(p.x, p.y)
+	p.anim:draw(p.x, p.y, -p.direction * math.pi / 2 - math.pi / 2, 1, 1, p.w / 2, p.h / 2)
 
 	--map
 	map("buildings").visible=false
@@ -184,7 +195,8 @@ function spawn_Child()
 	t.x, t.y = spawn_entity()
 
 	t.anim = newAnimation(t.animImage, t.w, t.h, animDelay, animFrames)
-	t.direction = math.random(1,4)	t.isGrabbed = false
+	t.direction = math.random(1,4)	
+	t.isGrabbed = false
 	
 	table.insert(children, t)
 end

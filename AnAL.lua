@@ -97,7 +97,11 @@ end
 -- @param ox The X coordinate of the origin
 -- @param oy The Y coordinate of the origin
 function animation:draw(x, y, angle, sx, sy, ox, oy)
-	love.graphics.drawq(self.img, self.frames[self.position], x, y, angle, sx, sy, ox, oy)
+	if ox and oy then
+		love.graphics.drawq(self.img, self.frames[self.position], x + ox, y + oy, angle, sx, sy, ox, oy)
+	else
+		love.graphics.drawq(self.img, self.frames[self.position], x, y, angle, sx, sy, ox, oy)
+	end
 end
 
 --- Add a frame
