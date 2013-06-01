@@ -37,6 +37,15 @@ function automove(entity, dt)
 		--print (entity.x.." "..entity.y)
 end
 
+function spawn_entity()
+	repeat
+		x = math.random(0, 800-32)
+		y =  math.random(0, 600-32)
+	until can_move_to(x, y, 32, 32)
+
+	return x,y
+end
+
 function can_move_to( x,y ,w,h)
 	return not hits( x+4,y+4 ,w-8,h-8,"wall");	
 end
