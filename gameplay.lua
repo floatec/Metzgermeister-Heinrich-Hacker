@@ -49,6 +49,7 @@ function game.load(map_file)
 	p.w = p.animImage:getWidth() / animFrames
 	p.h = p.animImage:getHeight()
 	p.direction = 1
+	p.speed = speed
 	p.anim = newAnimation(p.animImage, p.w, p.h, animDelay, animFrames)
 
 	for x, y, tile in map("buildings"):iterate() do
@@ -80,21 +81,31 @@ function game.update(dt)
 	end
 	oldx, oldy = p.x, p.y
 	newx, newy = p.x, p.y
+
+	--calculate speed
+	grabCount = 0
+	for i, v in ipairs(children) do
+		if (v.isGrabbed) then
+			grabCount = grabCount + 1
+		end
+	end
+	p.speed = 1 / (math.pow(grabCount, 1.25) + 1) * speed 
+
 	-- update x
 	if love.keyboard.isDown("left")   then
-		newx = p.x - speed * dt
+		newx = p.x - p.speed * dt
 		p.direction = 4
 	elseif love.keyboard.isDown("right") then
-		newx = p.x + speed * dt
+		newx = p.x + p.speed * dt
 		p.direction = 2
 	end
 
 	-- update y
 	if love.keyboard.isDown("up")  then
-		newy = p.y - speed * dt
+		newy = p.y - p.speed * dt
 		p.direction = 3
 	elseif love.keyboard.isDown("down") then
-		newy = p.y + speed * dt
+		newy = p.y + p.speed * dt
 		p.direction = 1
 	end
 
@@ -125,6 +136,9 @@ function game.update(dt)
 			end
 		end
 
+		-- reset speed to max
+		p.speed = speed
+
 		--movement & grabbing
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			for j, k in ipairs(enemies) do
@@ -137,6 +151,7 @@ function game.update(dt)
 				love.audio.play(sound.hallo_meine_liebe)
 			end
 			v.isGrabbed = true;
+			p.speed = 1
 		else
 			v.isGrabbed = false;
 			automove(v, dt)
@@ -150,10 +165,6 @@ function game.update(dt)
 	for i, v in ipairs(enemies) do
 		automove(v, dt)
 		v.anim:update(dt)
-
-		if (is_colliding(p, v)) then
-			print(p.x)
-		end
 	end
 end
 
