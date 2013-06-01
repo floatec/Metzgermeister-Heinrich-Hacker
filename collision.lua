@@ -25,7 +25,7 @@ function automove(entity, dt)
 			newy = entity.y - dist*(entity.direction-2)
 		end
 		-- wall hit
-		if can_move_to(newx+2,newy+2,28,28) then
+		if can_move_to(newx+4,newy+4,32-8,32-8) then
 			entity.x,entity.y=newx,newy
 			if(math.random(0,50)==0) then
 				entity.direction = math.random(1,4)
@@ -38,7 +38,11 @@ function automove(entity, dt)
 end
 
 function can_move_to( x,y ,w,h)
-	return not hits( x,y ,w,h,"wall");	
+	return not hits( x+4,y+4 ,w-8,h-8,"wall");	
+end
+
+function can_move_to_police( x,y ,w,h)
+	return not hits( x+4,y+4 ,w-8,h-8,"wall") and not hits( x+4,y+4 ,w-8,h-8,"policewall");	;	
 end
 
 function hits_spawn( x,y ,w,h)
