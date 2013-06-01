@@ -73,6 +73,7 @@ function game.load(map_file, countChildren, countEnemies)
 end
 
 function game.update(dt)
+	childhit=false
 	blood=blood+dt
 	countdown=countdown-dt
 	if gewicht>=100 then 
@@ -143,6 +144,10 @@ function game.update(dt)
 		-- reset speed to max
 		p.speed = speed
 
+		if is_colliding(p, v) then
+			childhit=true
+		end
+
 		--movement & grabbing
 		if love.keyboard.isDown(" ") and is_colliding(p, v) then
 			for j, k in ipairs(enemies) do
@@ -206,6 +211,9 @@ function game.draw()
 	
 	love.graphics.printf("Zeit: "..(math.floor(countdown/60))..":"..(math.floor(countdown)%60), 0, 0, width, "left")	
     love.graphics.printf("Fleisch: "..gewicht.."kg", 0, 0, width, "right")	
+    if childhit then
+  		love.graphics.printf("press and hold [SPACE] to grab a child", 0, height-20, width, "center")
+    end
     if blood<0.12 then
     	love.graphics.draw(images.blood, 0,0)
     end
