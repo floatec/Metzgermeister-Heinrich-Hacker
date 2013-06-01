@@ -5,7 +5,7 @@ loader = require("AdvTiledLoader/loader")
 game={}
 game.state=0
 
-function game.load(map_file)
+function game.load(map_file, countChildren, countEnemies)
 	love.graphics.setNewFont(14)
 	-- Path to the tmx files. The file structure must be similar to how they are saved in Tiled
 	loader.path = "maps/"
@@ -24,7 +24,7 @@ function game.load(map_file)
 		enemy2 = love.graphics.newImage("gfx/enemy2.png"),
 		blood = love.graphics.newImage("gfx/blood.png")
 	}
-	countdown=300
+	countdown=90
 	-- sound effect
 	sound={
 		scream = love.audio.newSource("sfx/scream.wav", "static"),
@@ -61,22 +61,21 @@ function game.load(map_file)
   			p.x,p.y=x*16,y*16
   		break
   		end
-	end	
+	end
 
-	spawn_Child()
-	spawn_Child()
-	spawn_Child()
-	spawn_Child()
-	spawn_Child()
+	for i=1,countChildren do
+		spawn_Child()
+	end
 
-	spawn_Enemy()
-	spawn_Enemy()
+	for i=1,countEnemies do
+		spawn_Enemy()
+	end
 end
 
 function game.update(dt)
 	blood=blood+dt
 	countdown=countdown-dt
-	if gewicht>50 then 
+	if gewicht>=100 then 
 			game.state=1
 	elseif countdown<0 then
 		
@@ -93,7 +92,7 @@ function game.update(dt)
 			grabCount = grabCount + 1
 		end
 	end
-	p.speed = 1 / (math.pow(grabCount, 1.25) + 1) * speed 
+	p.speed = 1 / (math.exp (grabCount, 1.25) + 1) * speed + 50 
 
 	-- update x
 	if love.keyboard.isDown("left")   then
