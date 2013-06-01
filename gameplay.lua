@@ -5,7 +5,7 @@ loader = require("AdvTiledLoader/loader")
 game={}
 game.state=0
 
-function game.load(map_file)
+function game.load(map_file, countChildren, countEnemies)
 	love.graphics.setNewFont(14)
 	-- Path to the tmx files. The file structure must be similar to how they are saved in Tiled
 	loader.path = "maps/"
@@ -58,16 +58,15 @@ function game.load(map_file)
   			p.x,p.y=x*16,y*16
   		break
   		end
-	end	
+	end
 
-	spawn_Child()
-	spawn_Child()
-	spawn_Child()
-	spawn_Child()
-	spawn_Child()
+	for i=1,countChildren do
+		spawn_Child()
+	end
 
-	spawn_Enemy()
-	spawn_Enemy()
+	for i=1,countEnemies do
+		spawn_Enemy()
+	end
 end
 
 function game.update(dt)
@@ -89,7 +88,7 @@ function game.update(dt)
 			grabCount = grabCount + 1
 		end
 	end
-	p.speed = 1 / (math.pow(grabCount, 1.25) + 1) * speed 
+	p.speed = 1 / (math.exp (grabCount, 1.25) + 1) * speed 
 
 	-- update x
 	if love.keyboard.isDown("left")   then

@@ -15,14 +15,14 @@ function love.update(dt)
 		startScreen.update(dt)
 		if startScreen.state==1 then
 			screen=GAME 
-			game.load("level"..level..".tmx")
+			game.load("level"..level..".tmx", 5, 2)
 		end
 	elseif screen == GAME then
 		game.update(dt)
 		if game.state==1 then
 			level=level+1
 			if level <4 then
-				game.load("level"..level..".tmx")
+				game.load("level"..level..".tmx", 5, level*2)
 			else
 				startScreen.state=0
 				screen=WIN
